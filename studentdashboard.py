@@ -12,8 +12,8 @@ st.markdown(""" Overall the students have performed better in their past exams a
 Despite more study hours that students have dedicated for their final exams.
 """)
 #table to summarize scores by scores, hours studied
-st.write("Summary of Students Performance according to scores and their hours of study")
-table = sdata.pivot(index='previous_scores', columns='exam_score', values='hours_studied')
+st.write("Summary of Top 10 Students Performance according to scores and their hours of study")
+table = sdata.head(10)[['previous_scores','exam_score','hours_studied']]
 st.dataframe(table)
 #histplot
 hist_fig = px.histogram(sdata,x='exam_score', nbins=10, title='Student Exam Performance')
