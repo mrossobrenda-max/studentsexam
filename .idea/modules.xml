@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../CoffeeSales/.idea/CoffeeSales.iml" filepath="$PROJECT_DIR$/../CoffeeSales/.idea/CoffeeSales.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../InsightLite/.idea/InsightLite.iml" filepath="$PROJECT_DIR$/../InsightLite/.idea/InsightLite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../PythonProject/.idea/PythonProject.iml" filepath="$PROJECT_DIR$/../PythonProject/.idea/PythonProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SportsAnalysis/.idea/SportsAnalysis.iml" filepath="$PROJECT_DIR$/../SportsAnalysis/.idea/SportsAnalysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/StudentsExam.iml" filepath="$PROJECT_DIR$/.idea/StudentsExam.iml" />
+    </modules>
+  </component>
+</project>
