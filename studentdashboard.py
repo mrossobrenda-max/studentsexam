@@ -3,7 +3,6 @@ import plotly.express as px
 import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
-from fpdf import FPDF
 #load dataset
 sdata = pd.read_csv("data/student_exam_scores.csv")
 #streamlit
@@ -186,25 +185,41 @@ else:
     selected_fig = None
 if selected_fig:
     st.download_button("Download Chart as HTML", selected_fig.to_html(), file_name="chart.html")
-if st.download_button("Download Full Report"):
-    with st.spinner("Downloading Full Report"):
-        #call the fxns
-        createhist(sdata).write_image("histogram.png")
-        previousbar(sdata).write_image("previousbar.png")
-        currentbar(sdata).write_image("currentbar.png")
-        heatmapfig(sdata).write_image("heatmap.png")
-        piechart(sdata).write_image("piechart.png")
-        regressionfig(sdata).write_image("regression.png")
-        #create pdf
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-        for img in [
-            "histogram.png", "previousbar.png", "currentbar.png",
-             "heatmap.png","piechart.png","regression.png"]:
-            pdf.image(img,x=10,w=180)
-        pdf.output("report.pdf")
+#call the fxns
+createhist(sdata).write_image("histogram.png")
+previousbar(sdata).write_image("previousbar.png")
+currentbar(sdata).write_image("currentbar.png")
+heatmapfig(sdata).write_image("heatmap.png")
+piechart(sdata).write_image("piechart.png")
+regressionfig(sdata).write_image("regression.png")
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+import datetime
 
+def compile_report():
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"students_report_{timestamp}.pdf"
+    c = canvas.Canvas(filename, pagesize=A4)
+
+    # Optional: Add a branded cover
+    c.setFont("Helvetica-Bold", 20)
+    c.drawString(100, 750, "The Conscious Spoon: Student Dashboard Report")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 730, f"Generated on {timestamp}")
+    c.showPage()
+
+    # Add exported chart images
+    chart_paths = ["charts/performance.png", "charts/attendance.png", "charts/feedback.png"]
+    for path in chart_paths:
+        c.drawImage(path, 50, 300, width=500, height=400)
+        c.showPage()
+
+    c.save()
+    return filename
+if st.button("Generate PDF Report"):
+    pdf_path = compile_report()
+    with open(pdf_path, "rb") as f:
+        st.download_button("Download Report", f, file_name=pdf_path)
 
 
 
