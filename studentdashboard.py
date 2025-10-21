@@ -124,7 +124,7 @@ Despite more study hours that students have dedicated for their final exams.</p>
 </body>
 </html>
 """
-from weasyprint import HTML
-HTML(string=html_content).write_pdf("students_report.pdf")
+import pdfkit
+pdfkit.from_string(html_content, "students_report.pdf")
 with open("students_report.pdf", "rb") as f:
     st.download_button("📥 Download PDF Report", f, file_name="students_report.pdf")
