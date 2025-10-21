@@ -108,7 +108,6 @@ elif chart_option == '🌡️Heat Map':
 else:
     selected_fig = None
 if selected_fig:
-    st.plotly_chart(selected_fig, use_container_width=True)
     st.download_button("Download Chart as HTML", selected_fig.to_html(), file_name="chart.html")
 
 
