@@ -3,3 +3,4 @@ plotly
 numpy
 streamlit
 xhtml2pdf
+pisa
