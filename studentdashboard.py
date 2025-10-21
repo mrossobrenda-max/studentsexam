@@ -124,7 +124,17 @@ Despite more study hours that students have dedicated for their final exams.</p>
 </body>
 </html>
 """
-import pdfkit
-pdfkit.from_string(html_content, "students_report.pdf")
-with open("students_report.pdf", "rb") as f:
-    st.download_button("📥 Download PDF Report", f, file_name="students_report.pdf")
+from xhtml2pdf import pisa
+import io
+
+def convert_html_to_pdf(source_html):
+    result = io.BytesIO()
+    pisa_status = pisa.CreatePDF(source_html, dest=result)
+    if pisa_status.err:
+        return None
+    return result
+pdf = convert_html_to_pdf(html_content)
+if pdf:
+    st.download_button("📥 Download PDF Report", pdf.getvalue(), file_name="students_report.pdf")
+else:
+    st.error("❌ PDF generation failed.")
