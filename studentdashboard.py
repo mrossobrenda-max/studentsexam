@@ -186,7 +186,7 @@ else:
     selected_fig = None
 if selected_fig:
     st.download_button("Download Chart as HTML", selected_fig.to_html(), file_name="chart.html")
-if st.button("Download Full Report"):
+if st.download_button("Download Full Report"):
     with st.spinner("Downloading Full Report"):
         #call the fxns
         createhist(sdata).write_image("histogram.png")
@@ -204,14 +204,7 @@ if st.button("Download Full Report"):
              "heatmap.png","piechart.png","regression.png"]:
             pdf.image(img,x=10,w=180)
         pdf.output("report.pdf")
-        # Offer download
-        with open("coffeesalesdashboard.pdf", "rb") as f:
-            st.download_button(
-                label="📥 Download Full Report",
-                data=f,
-                file_name="Coffee_Sales_Report.pdf",
-                mime="application/pdf"
-            )
+
 
 
 
