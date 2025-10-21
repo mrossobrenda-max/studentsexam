@@ -126,7 +126,6 @@ Despite more study hours that students have dedicated for their final exams.</p>
 """
 from xhtml2pdf import pisa
 import io
-
 def convert_html_to_pdf(source_html):
     result = io.BytesIO()
     pisa_status = pisa.CreatePDF(source_html, dest=result)
