@@ -204,7 +204,6 @@ if st.button("Download Full Report"):
              "heatmap.png","piechart.png","regression.png"]:
             pdf.image(img,x=10,w=180)
         pdf.output("report.pdf")
-        #offer download option
 
 
 
