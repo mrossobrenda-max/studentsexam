@@ -15,82 +15,6 @@ Despite more study hours that students have dedicated for their final exams.
 st.write("Summary of Top 10 Students Performance according to scores and their hours of study")
 table = sdata.head(10)[['previous_scores','exam_score','hours_studied']]
 st.dataframe(table)
-#fxns to handle reports (PDF)
-def createhist(sdata):
-    fig = px.histogram(sdata, x='exam_score', nbins=10, title='Student Exam Performance')
-    fig.update_layout(
-        width=700,
-        height=400,
-        barmode='group',
-        bargap=0.1,
-        plot_bgcolor='white',
-    )
-    return  fig
-def previousbar(sdata):
-    topscores = sdata['previous_scores'].value_counts().head(5).reset_index()
-    topscores.columns = ['Previous_scores', 'Students']
-    fig = px.bar(topscores, x='Students', y='Previous_scores', orientation='h',
-                       title='Previous Student Exam Performance', color='Students',
-                       color_discrete_sequence=px.colors.sequential.Blues,
-                       )
-    fig.update_layout(
-        width=600,
-        height=400,
-        plot_bgcolor='white',
-    )
-    return fig
-def currentbar(sdata):
-    currtopscores = sdata['exam_score'].value_counts().head(5).reset_index()
-    currtopscores.columns = ['Exam_scores', 'Students']
-    fig = px.bar(currtopscores, x='Students', y='Exam_scores', orientation='h',
-                              title='Current Student Exam Performance', color='Students',
-                              color_discrete_sequence=px.colors.sequential.Blues,
-                              )
-    fig.update_layout(
-        width=600,
-        height=400,
-        plot_bgcolor='white',
-    )
-    return fig
-def heatmapfig(sdata):
-    corr = sdata[['hours_studied', 'sleep_hours', 'attendance_percent', 'previous_scores', 'exam_score']].corr()
-    fig = px.imshow(corr, text_auto='.3f', color_continuous_scale='Viridis', title='Correlation Heatmap',
-                         aspect='auto')
-    fig.update_layout(
-        width=600,
-        height=400,
-    )
-    return fig
-def piechart(sdata):
-    pavg = sdata['previous_scores'].mean()
-    avg = sdata['exam_score'].mean()
-    fig = px.pie(names=['Previous Scores', 'Exam Score'],
-                     values=[pavg, avg],
-                     title='Results Comparison',
-                     color_discrete_sequence=['#66b3ff', '#ff9999'])
-    return fig
-def regressionfig(sdata):
-    x = sdata['hours_studied']
-    y = sdata['exam_score']
-    # fit our regression line since plotly doesnot automatically understands regression plots like seaborn
-    coeffs = np.polyfit(x, y, 1)
-    reg_line = np.poly1d(coeffs)
-    x_range = np.linspace(x.min(), x.max(), 20)
-    ypred = reg_line(x_range)
-    # create the visual
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=ypred, mode='markers', name='Hours studied'))
-    fig.add_trace(go.Scatter(x=x_range, y=ypred, mode='lines', name='Exam Score'))
-    fig.update_layout(
-        width=600,
-        height=400,
-        font=dict(size=10),
-        plot_bgcolor='white',
-        title='How the number of hours studied relate with the student exam scores',
-        xaxis_title='Hours Studied',
-        yaxis_title='Exam Score',
-    )
-    return fig
 #histplot
 hist_fig = px.histogram(sdata,x='exam_score', nbins=10, title='Student Exam Performance')
 hist_fig.update_layout(
@@ -185,42 +109,22 @@ else:
     selected_fig = None
 if selected_fig:
     st.download_button("Download Chart as HTML", selected_fig.to_html(), file_name="chart.html")
-#call the fxns
-createhist(sdata).write_image("histogram.png")
-previousbar(sdata).write_image("previousbar.png")
-currentbar(sdata).write_image("currentbar.png")
-heatmapfig(sdata).write_image("heatmap.png")
-piechart(sdata).write_image("piechart.png")
-regressionfig(sdata).write_image("regression.png")
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-import datetime
-
-def compile_report():
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"students_report_{timestamp}.pdf"
-    c = canvas.Canvas(filename, pagesize=A4)
-
-    # Optional: Add a branded cover
-    c.setFont("Helvetica-Bold", 20)
-    c.drawString(100, 750, "The Conscious Spoon: Student Dashboard Report")
-    c.setFont("Helvetica", 12)
-    c.drawString(100, 730, f"Generated on {timestamp}")
-    c.showPage()
-
-    # Add exported chart images
-    chart_paths = ["charts/performance.png", "charts/attendance.png", "charts/feedback.png"]
-    for path in chart_paths:
-        c.drawImage(path, 50, 300, width=500, height=400)
-        c.showPage()
-
-    c.save()
-    return filename
-if st.button("Generate PDF Report"):
-    pdf_path = compile_report()
-    with open(pdf_path, "rb") as f:
-        st.download_button("Download Report", f, file_name=pdf_path)
-
-
-
-
+html_content = """
+<html>
+<head><style>
+body { font-family: Arial; margin: 40px; }
+h1 { color: #2E8B57; }
+</style></head>
+<body>
+<h1> Student Exam Dashboard</h1>
+<p><strong>Date:</strong> 2025-10-21</p>
+<h2>Summary</h2>
+<p>Overall the students have performed better in their past exams as compared to the finals.
+Despite more study hours that students have dedicated for their final exams.</p>
+</body>
+</html>
+"""
+from weasyprint import HTML
+HTML(string=html_content).write_pdf("students_report.pdf")
+with open("students_report.pdf", "rb") as f:
+    st.download_button("📥 Download PDF Report", f, file_name="students_report.pdf")
