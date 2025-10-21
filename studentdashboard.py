@@ -204,6 +204,14 @@ if st.button("Download Full Report"):
              "heatmap.png","piechart.png","regression.png"]:
             pdf.image(img,x=10,w=180)
         pdf.output("report.pdf")
+        # Offer download
+        with open("coffeesalesdashboard.pdf", "rb") as f:
+            st.download_button(
+                label="📥 Download Full Report",
+                data=f,
+                file_name="Coffee_Sales_Report.pdf",
+                mime="application/pdf"
+            )
 
 
 
